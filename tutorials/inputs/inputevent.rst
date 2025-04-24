@@ -246,7 +246,9 @@ there are two different ways to do this:
 -  Feeding InputEvents manually to the `Input <class_input>` singleton. This is a more powerful way to simulate input, since it
    allows creating your own events and customising them as you need. To do this, you have to create a new InputEvent of any type,
    assign its variables as needed and feed it to the engine through the :ref:`Input.parse_input_event() <class_input_method_parse_input_event>`
-   method, like in the following example:
+   method. The viewport's :ref:`viewport.push_input("simulated_input") <class_Viewport_method_push_input>` and
+   :ref:`viewport.push_unhandled_input("simulated_input") <class_Viewport_method_push_unhandled_input>` methods can also be used,
+   the differences with the previous one can be found in their documentation. Usage example:
 
 .. tabs::
  .. code-tab:: gdscript GDScript
