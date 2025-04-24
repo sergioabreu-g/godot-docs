@@ -958,6 +958,9 @@ Returns ``true`` if you are pressing the key in the physical location on the 101
 
 Feeds an :ref:`InputEvent<class_InputEvent>` to the game. Can be used to artificially trigger input events from code. Also generates :ref:`Node._input()<class_Node_private_method__input>` calls.
 
+**Note:** when feeding InputEvents with a position variable, such as :ref:`🔗<class_InputEventMouseButton>`, Godot expects it to be in the window coordinate system. Viewport coordinates can be
+easily converted to screen coordinates by multiplying them by the screen transform: ``input_event.position = get_viewport().get_screen_transform() * position_in_viewport_coordinates``.
+
 
 .. tabs::
 
