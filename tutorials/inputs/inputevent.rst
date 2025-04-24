@@ -219,10 +219,34 @@ tab and assigned input events.
 Any event has the methods :ref:`InputEvent.is_action() <class_InputEvent_method_is_action>`,
 :ref:`InputEvent.is_pressed() <class_InputEvent_method_is_pressed>` and :ref:`InputEvent.is_echo() <class_InputEvent_method_is_echo>`.
 
-Alternatively, it may be desired to supply the game back with an action
-from the game code (a good example of this is detecting gestures).
-The Input singleton has a method for this:
-:ref:`Input.parse_input_event() <class_input_method_parse_input_event>`. You would normally use it like this:
+.. seealso::
+
+   See :ref:`doc_first_3d_game_input_actions` for a tutorial on adding input
+   actions in the project settings.
+
+InputMap
+--------
+
+Customizing and re-mapping input from code is often desired. If your
+whole workflow depends on actions, the :ref:`InputMap <class_InputMap>` singleton is
+ideal for reassigning or creating different actions at runtime. This
+singleton is not saved (must be modified manually) and its state is run
+from the project settings (project.godot). So any dynamic system of this
+type needs to store settings in the way the programmer best sees fit.
+
+
+Simulating input
+-----------------
+Sometimes it's useful to simulate input, such as when detecting gestures or controlling the cursor with a joystick. In Godot
+there are two different ways to do this:
+
+-  Calling :ref:`Input.action_press("simulated_action") <class_input_method_action_press>` and
+   :ref:`Input.action_release("simulated_action") <class_input_method_action_release>`, which will trigger the given action just as
+   if you pressed or released one of its assigned buttons.
+-  Feeding InputEvents manually to the `Input <class_input>` singleton. This is a more powerful way to simulate input, since it
+   allows creating your own events and customising them as you need. To do this, you have to create a new InputEvent of any type,
+   assign its variables as needed and feed it to the engine through the :ref:`Input.parse_input_event() <class_input_method_parse_input_event>`
+   method, like in the following example:
 
 .. tabs::
  .. code-tab:: gdscript GDScript
@@ -243,18 +267,23 @@ The Input singleton has a method for this:
     // Feedback.
     Input.ParseInputEvent(ev);
 
+**Note:** when feeding InputEvents through the :ref:`Input.parse_input_event() <class_input_method_parse_input_event>` method, Godot expects
+positions to be in window screen coordinates. This is quite important when simulating mouse input, since you have to convert your position
+to screen coordinates before assigning them to the event. For example:
 
-.. seealso::
+.. tabs::
+ .. code-tab:: gdscript GDScript
+    var ie = InputEventMouseButton.new()
+    ie.button_index = MOUSE_BUTTON_LEFT
+    ie.position = get_viewport().get_screen_transform() * get_viewport().get_mouse_position()
+    ie.pressed = true
+    Input.parse_input_event(ie)
 
-   See :ref:`doc_first_3d_game_input_actions` for a tutorial on adding input
-   actions in the project settings.
-
-InputMap
---------
-
-Customizing and re-mapping input from code is often desired. If your
-whole workflow depends on actions, the :ref:`InputMap <class_InputMap>` singleton is
-ideal for reassigning or creating different actions at runtime. This
-singleton is not saved (must be modified manually) and its state is run
-from the project settings (project.godot). So any dynamic system of this
-type needs to store settings in the way the programmer best sees fit.
+ .. code-tab:: csharp
+    var ie = new InputEventMouseButton()
+    {
+        ButtonIndex = MouseButton.Left,
+        Position = GetViewport().GetScreenTransform() * GetViewport().GetMousePosition(),
+        Pressed = true,
+    };
+    Input.ParseInputEvent(ie);
