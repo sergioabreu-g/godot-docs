@@ -108,8 +108,9 @@ properly.
 Feeding custom input events
 ---------------------------
 
-It is often desired to feed custom input events to the game. With the above knowledge, to correctly
-do this in the focused window, it must be done the following way:
+It is often desired to feed custom input events to the game, which may have an associated position, such as mouse clicks.
+The position is expected to be in screen coordinates, so when using a local position we first need to transform it as in
+the following example:
 
 .. tabs::
  .. code-tab:: gdscript GDScript
